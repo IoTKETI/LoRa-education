@@ -1,0 +1,20 @@
+{
+  "name": "edgex-proxy",
+  "version": "0.0.1",
+  "description": "Disposable_IoT",
+  "main": "EdgexProxy.js",
+  "scripts": {
+    "start": "node EdgexProxy.jsjs"
+  },
+  "dependencies": {
+    "async": "^2.6.1",
+    "body-parser": "^1.15.1",
+    "cors": "^2.8.5",
+    "mqtt": "^2.18.8",
+    "express": "^4.13.4",
+    "request": "^2.72.0"
+  },
+  "author": "JaeYoungHwang",
+  "email": "forest62590@gmail.com",
+  "license": "ISC"
+}
