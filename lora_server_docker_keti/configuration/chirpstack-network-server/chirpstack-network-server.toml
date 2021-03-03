@@ -1,0 +1,64 @@
+# See https://www.chirpstack.io/network-server/install/config/ for a full
+# configuration example and documentation.
+#
+# This file is for the EU868 band. See the examples/ folder for more
+# configuration examples.
+
+[postgresql]
+dsn="postgres://loraserver_ns:keti@localhost/loraserver_ns?sslmode=disable"
+
+[redis]
+url="redis://localhost:6379"
+
+[network_server]
+net_id="000000"
+
+[network_server.band]
+name="KR_920_923"
+
+[network_server.network_settings]
+
+  [[network_server.network_settings.extra_channels]]
+  frequency=922100000
+  min_dr=0
+  max_dr=5
+
+  [[network_server.network_settings.extra_channels]]
+  frequency=922300000
+  min_dr=0
+  max_dr=5
+
+  [[network_server.network_settings.extra_channels]]
+  frequency=922500000
+  min_dr=0
+  max_dr=5
+
+  [[network_server.network_settings.extra_channels]]
+  frequency=922700000
+  min_dr=0
+  max_dr=5
+
+  [[network_server.network_settings.extra_channels]]
+  frequency=922900000
+  min_dr=0
+  max_dr=5
+
+  [[network_server.network_settings.extra_channels]]
+  frequency=923100000
+  min_dr=0
+  max_dr=5
+
+  [[network_server.network_settings.extra_channels]]
+  frequency=923300000
+  min_dr=0
+  max_dr=5
+
+[network_server.gateway.backend.mqtt]
+server="tcp://localhost:1883"
+
+[join_server.default]
+#server="http://chirpstack-application-server:8003"
+server="http://localhost:8003"
+
+#[geolocation_server]
+#server="chirpstack-geolocation-server:8005"

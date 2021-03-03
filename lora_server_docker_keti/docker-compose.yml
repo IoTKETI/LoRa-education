@@ -1,0 +1,79 @@
+version: "3"
+
+services:
+  rpi_ttn_gateway:
+    image: iotketi/lora-gateway-rpi-ttn:latest
+  #  working_dir: /opt/ttn-gateway/bin
+    network_mode: host
+    privileged: true
+    volumes:
+      - ./configuration/rpi_ttn_gateway/local_conf.json:/opt/ttn-gateway/bin/local_conf.json
+      - ./configuration/rpi_ttn_gateway/global_conf.json:/opt/ttn-gateway/bin/global_conf.json
+    command: ./start.sh
+
+  chirpstack-network-server:
+    image: ceticasbl/chirpstack-network-server:v3.4.1
+    network_mode: host
+    depends_on:
+      - mosquitto
+      - postgresql
+      - redis
+      - rpi_ttn_gateway
+    volumes:
+      - ./configuration/chirpstack-network-server:/etc/chirpstack-network-server
+
+  chirpstack-application-server:
+    image: ceticasbl/chirpstack-application-server:v3.5.1
+    network_mode: host
+    depends_on:
+      - mosquitto
+      - postgresql
+      - redis
+      - rpi_ttn_gateway
+    ports:
+      - 8080:8080
+    volumes:
+      - ./configuration/chirpstack-application-server:/etc/chirpstack-application-server
+
+  chirpstack-gateway-bridge:
+    image: ceticasbl/chirpstack-gateway-bridge:v3.4.1
+
+    ports:
+      - 1700:1700/udp
+    volumes:
+      - ./configuration/chirpstack-gateway-bridge:/etc/chirpstack-gateway-bridge
+    depends_on:
+      - mosquitto
+      - postgresql
+      - redis
+      - rpi_ttn_gateway
+    network_mode: host
+
+#  chirpstack-geolocation-server:
+#    image: chirpstack/chirpstack-geolocation-server:3
+#    volumes:
+#      - ./configuration/chirpstack-geolocation-server:/etc/chirpstack-geolocation-server
+
+  postgresql:
+    image: postgres:9.6-alpine
+    network_mode: host
+    environment:
+      - POSTGRES_PASSWORD=keti
+    volumes:
+      - ./configuration/postgresql/initdb:/docker-entrypoint-initdb.d
+      - postgresqldata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:5-alpine
+    network_mode: host
+    volumes:
+      - redisdata:/data
+
+  mosquitto:
+    image: eclipse-mosquitto
+    network_mode: host
+    ports:
+      - 1883:1883
+volumes:
+  postgresqldata:
+  redisdata:
